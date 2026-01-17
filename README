@@ -1,0 +1,11 @@
+## Git Hooks
+
+Ce projet utilise des hooks Git partagés.
+
+Après le clone :
+
+```bash
+./scripts/install-hooks.sh
+```
+
+---

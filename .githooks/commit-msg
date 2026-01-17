@@ -1,0 +1,25 @@
+#!/bin/sh
+
+commit_msg_file="$1"
+commit_msg=$(cat "$commit_msg_file")
+
+pattern="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-zA-Z0-9_-]+\))?: .+"
+
+if ! echo "$commit_msg" | grep -qE "$pattern"; then
+  echo "❌ Message de commit invalide."
+  echo ""
+  echo "Format attendu :"
+  echo "  type(scope optionnel): description"
+  echo ""
+  echo "Exemples valides :"
+  echo "  feat(api): ajouter endpoint POST /users"
+  echo "  fix(auth): corriger expiration token"
+  echo "  docs: mettre à jour README"
+  echo "  refactor(db): simplifier requêtes"
+  echo ""
+  echo "Types autorisés :"
+  echo "  feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+  exit 1
+fi
+
+exit 0
