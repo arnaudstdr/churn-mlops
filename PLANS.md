@@ -68,9 +68,9 @@ Construire un **modèle baseline simple, robuste et explicable**.
 ### Tâches
 
 #### Données
-- [ ] Sélectionner un dataset de churn (ex : Telco Customer Churn)
-- [ ] Inspecter rapidement les données (types, valeurs manquantes)
-- [ ] Documenter les hypothèses principales
+- [x] Sélectionner un dataset de churn (ex : Telco Customer Churn)
+- [x] Inspecter rapidement les données (types, valeurs manquantes)
+- [x] Documenter les hypothèses principales
 
 #### Modélisation
 - [ ] Définir clairement la cible (churn / no churn)
