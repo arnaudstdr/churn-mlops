@@ -3,8 +3,3 @@ __pycache__/
 .env
 *.log
 venv/
-
-# codex
-AGENTS.md
-PLANS.md
-plans/
