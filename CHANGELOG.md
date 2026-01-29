@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A
 
-## [0.1.0] - 2026-01-29
+## [0.2.0] - 2026-01-29
 
 ### Added
 - Initial project setup with basic structure (api/, ml/, data/, scripts/, docs/).
