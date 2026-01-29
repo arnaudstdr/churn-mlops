@@ -44,19 +44,19 @@ Poser une base saine : repo, conventions, outils, observabilité de base.
 - [x] Initialiser le repository GitHub (public)
 - [x] Créer la structure de dossiers (api/, ml/, data/, scripts/, docs/)
 - [x] Ajouter un README minimal (objectif du projet)
-- [ ] Définir une convention de versioning (vX.Y.Z)
+- [x] Définir une convention de versioning (vX.Y.Z)
 
 #### Outils & Qualité
 - [x] Mettre en place des hooks Git partagés
-- [ ] Vérifier que les hooks fonctionnent réellement
-- [ ] Définir les conventions de nommage et de structure
+- [x] Vérifier que les hooks fonctionnent réellement
+- [x] Définir les conventions de nommage et de structure
 
 #### Observabilité (base)
-- [ ] Créer un projet Sentry (environnements dev / demo)
-- [ ] Ajouter la dépendance Sentry SDK
-- [ ] Centraliser l’initialisation Sentry (via variables d’environnement)
-- [ ] Tester volontairement la remontée d’une erreur
-- [ ] Documenter la partie observabilité dans le README
+- [x] Créer un projet Sentry (environnements dev / demo)
+- [x] Ajouter la dépendance Sentry SDK
+- [x] Centraliser l’initialisation Sentry (via variables d’environnement)
+- [x] Tester volontairement la remontée d’une erreur
+- [x] Documenter la partie observabilité dans le README
 
 ---
 

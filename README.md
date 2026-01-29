@@ -97,5 +97,28 @@ After cloning:
 ./scripts/install-hooks.sh
 ```
 
+---
+
+## Observability
+
+### Overview
+
+Observability is a core component of this project. It ensures that we can monitor the health, performance, and behavior of our system in production. This includes tracking errors, logging structured data, and monitoring model performance over time.
+
+### Tools
+
+#### Sentry
+
+We use **Sentry** for error tracking and monitoring. Sentry helps us:
+
+- Capture and track errors in real-time.
+- Monitor API performance and health.
+- Correlate errors with specific requests using `request_id`.
+- Set up alerts for critical issues.
+
+### Logging
+
+Structured logging is essential for debugging and monitoring. We use JSON logging to ensure that logs are easily parseable and can be integrated with logging platforms.
+
 ## Author
 Arnaud Stadler | Python Developer - AI Automation & MLOps (Productive & Delivery)
