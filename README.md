@@ -62,6 +62,32 @@ At this stage, the project focuses on:
 
 Technical components (modeling, API, CI/CD, monitoring, deployment) will be added incrementally and documented as the project evolves.
 
+### Modeling
+
+A baseline churn prediction model has been implemented using logistic regression. The model is trained on the Telco Customer Churn dataset and achieves the following performance metrics:
+
+- **ROC-AUC**: 0.8636
+- **Precision**: 0.6820
+- **Recall**: 0.6312
+- **F1-score**: 0.6556
+
+The model is saved as `models/logistic_regression_model.joblib` and the preprocessing pipeline is saved as `models/preprocessor.joblib`.
+
+#### Data Preprocessing
+
+The preprocessing pipeline includes:
+- **One-Hot Encoding**: For categorical variables (e.g., gender, contract type).
+- **Standard Scaling**: For numerical variables (e.g., tenure, monthly charges).
+- **Imputation**: Handling missing values by replacing them with the mode (categorical) or median (numerical).
+
+#### Model Training
+
+The logistic regression model is trained with the following parameters:
+- `max_iter`: 1000
+- `random_state`: 42
+
+The model is evaluated on both validation and test sets to ensure robustness and generalization.
+
 ---
 
 ## Planned evolution (high-level roadmap)

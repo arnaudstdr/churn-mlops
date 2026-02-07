@@ -73,23 +73,23 @@ Construire un **modèle baseline simple, robuste et explicable**.
 - [x] Documenter les hypothèses principales
 
 #### Modélisation
-- [ ] Définir clairement la cible (churn / no churn)
-- [ ] Choisir une métrique principale (ex : ROC-AUC, recall churn)
-- [ ] Implémenter un preprocessing clair et reproductible
-    - [ ] encodage
-    - [ ] scaling
-- [ ] Mettre en place un split train / validation / test reproductible
+- [x] Définir clairement la cible (churn / no churn)
+- [x] Choisir une métrique principale (ex : ROC-AUC, recall churn)
+- [x] Implémenter un preprocessing clair et reproductible
+    - [x] encodage
+    - [x] scaling
+- [x] Mettre en place un split train / validation / test reproductible
 
 #### Modèle
-- [ ] Entraîner un modèle baseline (logistic regression, tree, etc.)
-- [ ] Pas de tuning excessif
-- [ ] Calculer les métriques offline
-- [ ] Choisir un seuil de décision argumenté
-- [ ] Sauvegarder les artefacts (modèle + preprocessing)
+- [x] Entraîner un modèle baseline (logistic regression, tree, etc.)
+- [x] Pas de tuning excessif
+- [x] Calculer les métriques offline
+- [x] Choisir un seuil de décision argumenté
+- [x] Sauvegarder les artefacts (modèle + preprocessing)
 
 #### Documentation
-- [ ]Documenter les choix ML dans le README
-- [ ] Expliquer les compromis (simplicité vs performance)
+- [x] Documenter les choix ML dans le README
+- [x] Expliquer les compromis (simplicité vs performance)
 
 ---
 
