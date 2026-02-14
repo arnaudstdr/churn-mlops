@@ -101,12 +101,12 @@ Exposer le modèle via une **API FastAPI claire et robuste**.
 ### Tâches
 
 #### API
-- [ ] Initialiser FastAPI
-- [ ] Définir les schémas d’entrée et de sortie (Pydantic)
-- [ ] Implémenter l’endpoint `/predict`
-- [ ] Implémenter la logique proba + seuil
-- [ ] Ajouter `/health` et `/model`
-- [ ] Gérer proprement les erreurs d’entrée (400 lisibles)
+- [x] Initialiser FastAPI
+- [x] Définir les schémas d’entrée et de sortie (Pydantic)
+- [x] Implémenter l’endpoint `/predict`
+- [x] Implémenter la logique proba + seuil
+- [x] Ajouter `/health` et `/model`
+- [x] Gérer proprement les erreurs d’entrée (400 lisibles)
 
 #### Observabilité API
 - [ ] Logging structuré (JSON)
@@ -116,7 +116,7 @@ Exposer le modèle via une **API FastAPI claire et robuste**.
 - [ ] Définir une stratégie de nommage des transactions
 
 #### Tests & Docs
-- [ ] Test manuel de l’API (Postman)
+- [ ] Test manuel de l'API (TestClient)
 - [ ] Documenter le contrat API dans le README
 
 ---
