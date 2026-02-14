@@ -30,14 +30,6 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
-
-RUN npm install -g npm@latest
-
-# --- IA CLIs ---
-RUN curl -LsSf https://mistral.ai/vibe/install.sh | bash
-# RUN npm install -g @openai/codex
-# RUN npm install -g @anthropic-ai/claude-code
-
 # --- Upgrade pip ---
 RUN python -m pip install --upgrade pip
 
