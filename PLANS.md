@@ -109,11 +109,11 @@ Exposer le modèle via une **API FastAPI claire et robuste**.
 - [x] Gérer proprement les erreurs d’entrée (400 lisibles)
 
 #### Observabilité API
-- [ ] Logging structuré (JSON)
-- [ ] Ajouter un `request_id` pour la corrélation logs / erreurs
-- [ ] Vérifier la remontée correcte des erreurs côté Sentry
-- [ ] Ajouter des tags Sentry (endpoint, model_version)
-- [ ] Définir une stratégie de nommage des transactions
+- [x] Logging structuré (JSON)
+- [x] Ajouter un `request_id` pour la corrélation logs / erreurs
+- [x] Vérifier la remontée correcte des erreurs côté Sentry
+- [x] Ajouter des tags Sentry (endpoint, model_version)
+- [x] Définir une stratégie de nommage des transactions
 
 #### Tests & Docs
 - [ ] Test manuel de l'API (TestClient)

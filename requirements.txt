@@ -1,8 +1,9 @@
-dotenv
+python-dotenv
 fastapi
 httpx
-joblib>=1.5.3
-pandas>=3.0.0
+joblib
+pandas
+pytest
 requests
-scikit-learn>=1.8.0
+scikit-learn
 sentry-sdk

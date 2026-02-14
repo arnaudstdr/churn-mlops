@@ -14,7 +14,7 @@ class ChurnPredictionService:
     Service for loading model and preprocessor, and making churn predictions.
     """
 
-    def __init__(self, model_path: str = None, preprocessor_path: str = None):
+    def __init__(self, model_path: Optional[str] = None, preprocessor_path: Optional[str] = None):
         """
         Initialize the prediction service.
 
@@ -22,8 +22,14 @@ class ChurnPredictionService:
             model_path: Path to the trained model file
             preprocessor_path: Path to the preprocessor file
         """
-        self.model_path = model_path or self._get_default_model_path()
-        self.preprocessor_path = preprocessor_path or self._get_default_preprocessor_path()
+        # Set default paths if None is provided
+        if model_path is None:
+            model_path = str(Path(__file__).parent.parent / "models" / "logistic_regression_model.joblib")
+        if preprocessor_path is None:
+            preprocessor_path = str(Path(__file__).parent.parent / "models" / "preprocessor.joblib")
+
+        self.model_path = model_path
+        self.preprocessor_path = preprocessor_path
         self.model = None
         self.preprocessor = None
         self.model_version = "1.0.0"  # This should be dynamically loaded or configured
@@ -60,7 +66,7 @@ class ChurnPredictionService:
             logger.error(f"Error loading artefacts: {str(e)}")
             raise
 
-    def preprocess_input(self, input_data: dict) -> pd.DataFrame:
+    def preprocess_input(self, input_data: dict):
         """
         Convert input dictionary to DataFrame and apply preprocessing.
 
@@ -68,7 +74,7 @@ class ChurnPredictionService:
             input_data: Dictionary containing customer features
 
         Returns:
-            Preprocessed DataFrame ready for prediction
+            Preprocessed data ready for prediction (numpy array or sparse matrix)
         """
         try:
             # Convert to DataFrame
@@ -124,18 +130,34 @@ class ChurnPredictionService:
         Returns:
             Dictionary containing model information
         """
-        if not self.model:
+        if not self.model or not self.preprocessor:
             return {
                 "model_loaded": False,
-                "error": "Model not loaded"
+                "error": "Model or preprocessor not loaded"
             }
 
-        return {
-            "model_type": "LogisticRegression",
-            "model_version": self.model_version,
-            "features": list(self.preprocessor.named_transformers_['cat'].named_steps['onehot'].get_feature_names_out()),
-            "model_loaded": True
-        }
+        try:
+            # Safely get feature names if available
+            features = []
+            if hasattr(self.preprocessor, 'named_transformers_') and \
+               'cat' in self.preprocessor.named_transformers_ and \
+               hasattr(self.preprocessor.named_transformers_['cat'], 'named_steps') and \
+               'onehot' in self.preprocessor.named_transformers_['cat'].named_steps and \
+               hasattr(self.preprocessor.named_transformers_['cat'].named_steps['onehot'], 'get_feature_names_out'):
+                features = list(self.preprocessor.named_transformers_['cat'].named_steps['onehot'].get_feature_names_out())
+
+            return {
+                "model_type": "LogisticRegression",
+                "model_version": self.model_version,
+                "features": features,
+                "model_loaded": True
+            }
+        except Exception as e:
+            logger.error(f"Error getting model info: {str(e)}")
+            return {
+                "model_loaded": False,
+                "error": f"Error getting model info: {str(e)}"
+            }
 
     def is_ready(self) -> bool:
         """

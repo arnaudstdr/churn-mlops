@@ -1,127 +1,81 @@
-#!/usr/bin/env python3
-"""
-Test script for the Customer Churn Prediction API.
-"""
+"""Tests for the Customer Churn Prediction API."""
 
-import sys
-import os
-import requests
-import json
-from fastapi.testclient import TestClient
+import uuid
 
-# Add the project root to Python path so we can import the api module
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from api.main import app
+# ── GET /health ──────────────────────────────────────────────────────────────
 
-def test_health_endpoint():
-    """Test the health endpoint."""
-    client = TestClient(app)
-    response = client.get("/health")
 
-    print("Health endpoint test:")
-    print(f"Status code: {response.status_code}")
-    print(f"Response: {response.json()}")
-    print()
+class TestHealthEndpoint:
+    def test_health_returns_healthy(self, client):
+        response = client.get("/health")
 
-    assert response.status_code == 200
-    data = response.json()
-    assert "status" in data
-    assert "model_loaded" in data
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "healthy"
+        assert data["model_loaded"] is True
 
-def test_model_endpoint():
-    """Test the model info endpoint."""
-    client = TestClient(app)
-    response = client.get("/model")
+    def test_health_has_request_id_header(self, client):
+        response = client.get("/health")
 
-    print("Model endpoint test:")
-    print(f"Status code: {response.status_code}")
-    print(f"Response: {response.json()}")
-    print()
+        request_id = response.headers.get("X-Request-ID")
+        assert request_id is not None
+        # Vérifie le format UUID
+        uuid.UUID(request_id)
 
-    assert response.status_code == 200
-    data = response.json()
-    assert "model_type" in data
-    assert "model_version" in data
-    assert "features" in data
 
-def test_predict_endpoint():
-    """Test the predict endpoint with sample data."""
-    client = TestClient(app)
+# ── GET /model ───────────────────────────────────────────────────────────────
 
-    # Sample customer data (from the dataset)
-    sample_data = {
-        "gender": "Female",
-        "SeniorCitizen": 0,
-        "Partner": "Yes",
-        "Dependents": "No",
-        "tenure": 1,
-        "PhoneService": "No",
-        "MultipleLines": "No phone service",
-        "InternetService": "DSL",
-        "OnlineSecurity": "No",
-        "OnlineBackup": "No",
-        "DeviceProtection": "No",
-        "TechSupport": "No",
-        "StreamingTV": "No",
-        "StreamingMovies": "No",
-        "Contract": "Month-to-month",
-        "PaperlessBilling": "Yes",
-        "PaymentMethod": "Electronic check",
-        "MonthlyCharges": 29.85,
-        "TotalCharges": "29.85"
-    }
 
-    print("Predict endpoint test:")
-    print(f"Input data: {json.dumps(sample_data, indent=2)}")
+class TestModelEndpoint:
+    def test_model_info(self, client):
+        response = client.get("/model")
 
-    response = client.post("/predict", json=sample_data)
+        assert response.status_code == 200
+        data = response.json()
+        assert "model_type" in data
+        assert "model_version" in data
+        assert isinstance(data["features"], list)
+        assert len(data["features"]) > 0
 
-    print(f"Status code: {response.status_code}")
-    print(f"Response: {response.json()}")
-    print()
 
-    assert response.status_code == 200
-    data = response.json()
-    assert "churn_prediction" in data
-    assert "churn_probability" in data
-    assert "model_version" in data
-    assert "request_id" in data
+# ── POST /predict ────────────────────────────────────────────────────────────
 
-    # Verify that probability is between 0 and 1
-    assert 0 <= data["churn_probability"] <= 1
 
-def test_invalid_input():
-    """Test the predict endpoint with invalid input."""
-    client = TestClient(app)
+class TestPredictEndpoint:
+    def test_predict_low_churn(self, client, sample_customer):
+        response = client.post("/predict", json=sample_customer)
 
-    # Invalid data (missing required field)
-    invalid_data = {
-        "gender": "Male",
-        "SeniorCitizen": 1,
-        # Missing other required fields
-    }
+        assert response.status_code == 200
+        data = response.json()
+        assert data["churn_prediction"] is False
+        assert 0 <= data["churn_probability"] <= 1
+        assert "request_id" in data
 
-    print("Invalid input test:")
-    response = client.post("/predict", json=invalid_data)
+    def test_predict_high_churn(self, client, high_churn_customer):
+        response = client.post("/predict", json=high_churn_customer)
 
-    print(f"Status code: {response.status_code}")
-    print(f"Response: {response.json()}")
-    print()
+        assert response.status_code == 200
+        data = response.json()
+        assert data["churn_prediction"] is True
+        assert 0 <= data["churn_probability"] <= 1
 
-    assert response.status_code == 422  # Unprocessable Entity for validation errors
+    def test_predict_missing_fields(self, client):
+        incomplete = {"gender": "Male", "SeniorCitizen": 1}
+        response = client.post("/predict", json=incomplete)
 
-if __name__ == "__main__":
-    print("Running API tests...\n")
+        assert response.status_code == 422
 
-    try:
-        test_health_endpoint()
-        test_model_endpoint()
-        test_predict_endpoint()
-        test_invalid_input()
+    def test_predict_invalid_types(self, client, sample_customer):
+        bad_payload = {**sample_customer, "tenure": "abc"}
+        response = client.post("/predict", json=bad_payload)
 
-        print("✅ All tests passed!")
+        assert response.status_code == 422
 
-    except Exception as e:
-        print(f"❌ Test failed: {str(e)}")
-        raise
+    def test_predict_request_id_header_matches_body(self, client, sample_customer):
+        response = client.post("/predict", json=sample_customer)
+
+        assert response.status_code == 200
+        header_id = response.headers.get("X-Request-ID")
+        body_id = response.json()["request_id"]
+        assert header_id == body_id
