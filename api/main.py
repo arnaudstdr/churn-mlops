@@ -6,7 +6,7 @@ import sentry_sdk
 import uuid
 import logging
 import json
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, Any
 
 from .schemas import CustomerFeatures, PredictionResult, HealthCheck, ModelInfo
@@ -16,7 +16,7 @@ from .service import ChurnPredictionService
 class JSONFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         log_data: Dict[str, Any] = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
@@ -89,7 +89,7 @@ async def log_requests(request: Request, call_next):
 
     # Add context to Sentry
     if sentry_dsn:
-        with sentry_sdk.configure_scope() as scope:
+        with sentry_sdk.new_scope() as scope:
             scope.set_tag("request_id", request_id)
             scope.set_tag("endpoint", request.url.path)
             scope.set_tag("method", request.method)
@@ -154,7 +154,7 @@ async def health_check(request: Request):
 
         # Add Sentry context
         if sentry_dsn:
-            with sentry_sdk.configure_scope() as scope:
+            with sentry_sdk.new_scope() as scope:
                 scope.set_tag("endpoint", "/health")
                 scope.set_tag("check_type", "health")
 
@@ -235,7 +235,7 @@ async def get_model_info(request: Request):
 
         # Add Sentry context
         if sentry_dsn:
-            with sentry_sdk.configure_scope() as scope:
+            with sentry_sdk.new_scope() as scope:
                 scope.set_tag("endpoint", "/model")
                 scope.set_tag("info_type", "model_metadata")
 
@@ -318,7 +318,7 @@ async def predict_churn(request: Request, customer_data: CustomerFeatures):
 
         # Add Sentry context for this specific prediction
         if sentry_dsn:
-            with sentry_sdk.configure_scope() as scope:
+            with sentry_sdk.new_scope() as scope:
                 scope.set_tag("model_version", prediction_service.model_version)
                 scope.set_tag("prediction_type", "churn")
                 # Note: customer_data doesn't have customerID in our schema
