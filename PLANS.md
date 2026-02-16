@@ -129,9 +129,9 @@ Assurer la **traçabilité, la reproductibilité et la non-régression**.
 ### Tâches
 
 #### MLflow
-- [ ] Déployer MLflow en local (docker-compose)
-- [ ] Logger paramètres, métriques et artefacts
-- [ ] Lier version modèle ↔ version code
+- [x] Déployer MLflow en local (docker-compose)
+- [x] Logger paramètres, métriques et artefacts
+- [x] Lier version modèle ↔ version code
 
 #### Tests
 - [x] Tests unitaires sur le preprocessing

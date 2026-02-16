@@ -53,40 +53,42 @@ The goal is **not** to build the most complex pipeline, but a **robust and under
 
 ## Current status
 
-🚧 **Early-stage project**
-
-At this stage, the project focuses on:
-- defining the scope
-- setting up the project structure
-- establishing quality and workflow standards
-
-Technical components (modeling, API, CI/CD, monitoring, deployment) will be added incrementally and documented as the project evolves.
+Sprints 0–3 completed. The project includes a trained model, a production API, ML tests, linting, and MLflow tracking. CI/CD (Sprint 4) is next.
 
 ### Modeling
 
-A baseline churn prediction model has been implemented using logistic regression. The model is trained on the Telco Customer Churn dataset and achieves the following performance metrics:
+A baseline churn prediction model is implemented using logistic regression, trained on the [Telco Customer Churn dataset](https://www.kaggle.com/blastchar/telco-customer-churn).
 
-- **ROC-AUC**: 0.8636
-- **Precision**: 0.6820
-- **Recall**: 0.6312
-- **F1-score**: 0.6556
+**Test set metrics (model v1.0.0)**
 
-The model is saved as `models/logistic_regression_model.joblib` and the preprocessing pipeline is saved as `models/preprocessor.joblib`.
+| Metric | Score |
+|--------|-------|
+| ROC-AUC | 0.8636 |
+| Precision | 0.6820 |
+| Recall | 0.6312 |
+| F1-score | 0.6556 |
 
-#### Data Preprocessing
+Artefacts: `models/logistic_regression_model.joblib`, `models/preprocessor.joblib`
 
-The preprocessing pipeline includes:
-- **One-Hot Encoding**: For categorical variables (e.g., gender, contract type).
-- **Standard Scaling**: For numerical variables (e.g., tenure, monthly charges).
-- **Imputation**: Handling missing values by replacing them with the mode (categorical) or median (numerical).
+#### Preprocessing pipeline
 
-#### Model Training
+- **One-Hot Encoding** for categorical variables (gender, contract type, etc.)
+- **Standard Scaling** for numerical variables (tenure, monthly charges)
+- **Imputation** — mode for categorical, median for numerical
 
-The logistic regression model is trained with the following parameters:
-- `max_iter`: 1000
-- `random_state`: 42
+#### Training
 
-The model is evaluated on both validation and test sets to ensure robustness and generalization.
+To retrain the model:
+
+```bash
+python -m ml.train
+# or with a custom dataset:
+python -m ml.train --data-path path/to/data.csv
+```
+
+Parameters: `max_iter=1000`, `random_state=42`, `threshold=0.5`, splits 70/15/15.
+
+Each run is tracked in MLflow (parameters, metrics, artifacts, git commit).
 
 ---
 
@@ -180,17 +182,35 @@ Every response includes a `X-Request-ID` header matching the `request_id` field 
 
 ---
 
-## Planned evolution (high-level roadmap)
+## MLflow
 
-Planned steps include:
-- baseline churn model
-- training and evaluation pipeline
-- API exposure of predictions
-- containerized deployment
-- monitoring of predictions and data drift
-- CI/CD automation
+MLflow is used to track experiments, parameters, metrics, and artifacts across training runs.
 
-Each step will be implemented with production constraints in mind.
+### Start the MLflow UI
+
+```bash
+docker compose up mlflow
+```
+
+The UI is available at `http://localhost:5000`.
+
+Each training run logs:
+- **Parameters**: splits, `max_iter`, `random_state`, `threshold`
+- **Metrics**: `val_*` and `test_*` for ROC-AUC, precision, recall, F1
+- **Artifacts**: `.joblib` model and preprocessor files, sklearn model
+- **Tags**: `git_commit`, `model_type`, `dataset`
+
+---
+
+## Roadmap
+
+| Sprint | Status | Scope |
+|--------|--------|-------|
+| 0 — Foundation | ✅ Done | Repo, hooks, Sentry |
+| 1 — ML offline | ✅ Done | Baseline model, preprocessing, artefacts |
+| 2 — API | ✅ Done | FastAPI, contract, tests, observability |
+| 3 — Monitoring & quality | ✅ Done | MLflow, ML tests, lint (ruff) |
+| 4 — CI & stabilisation | 🔜 Next | GitHub Actions, badges, cleanup |
 
 ---
 
