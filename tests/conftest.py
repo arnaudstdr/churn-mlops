@@ -2,11 +2,17 @@ import pytest
 from fastapi.testclient import TestClient
 
 from api.main import app
+from api.service import ChurnPredictionService
 
 
 @pytest.fixture(scope="module")
 def client():
     return TestClient(app)
+
+
+@pytest.fixture(scope="module")
+def service():
+    return ChurnPredictionService()
 
 
 @pytest.fixture

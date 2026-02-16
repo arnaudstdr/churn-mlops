@@ -134,13 +134,13 @@ Assurer la **traçabilité, la reproductibilité et la non-régression**.
 - [ ] Lier version modèle ↔ version code
 
 #### Tests
-- [ ] Tests unitaires sur le preprocessing
-- [ ] Test “predict smoke”
-- [ ] Test de non-régression simple sur un échantillon fixe
+- [x] Tests unitaires sur le preprocessing
+- [x] Test "predict smoke"
+- [x] Test de non-régression simple sur un échantillon fixe
 
 #### Qualité de code
 - [x] Configurer lint et format (ruff, black ou équivalent)
-- [ ] Ajouter des tests automatiques
+- [x] Ajouter des tests automatiques
 
 ---
 
