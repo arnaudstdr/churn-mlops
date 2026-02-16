@@ -116,8 +116,8 @@ Exposer le modèle via une **API FastAPI claire et robuste**.
 - [x] Définir une stratégie de nommage des transactions
 
 #### Tests & Docs
-- [ ] Test manuel de l'API (TestClient)
-- [ ] Documenter le contrat API dans le README
+- [x] Test manuel de l'API (TestClient)
+- [x] Documenter le contrat API dans le README
 
 ---
 

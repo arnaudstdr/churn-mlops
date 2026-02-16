@@ -4,34 +4,62 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
-  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/${localWorkspaceFolderBasename},type=bind",
+  "workspaceFolder": "/${localWorkspaceFolderBasename}",
   "remoteUser": "vscode",
-
+"remoteEnv": {
+    // Cette variable contiendra le vrai chemin sur votre machine (C:\Users\...\Projet ou /Users/...)
+    "HOST_PROJECT_PATH": "${localWorkspaceFolder}"
+  },
+  // Monte le socket Docker pour interagir avec les conteneurs de l'hôte
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
   ],
 
+  // Lance les services Docker sur l'hôte avant le démarrage du devcontainer
+  "initializeCommand": "cd ${localWorkspaceFolder} && docker compose up -d",
+
   "runArgs": [
-    "--name=${localWorkspaceFolderBasename}-devcontainer"
+    "--name=${localWorkspaceFolderBasename}-devcontainer",
+    "--network=${localWorkspaceFolderBasename}_default"
   ],
 
+  // Variables d'environnement exposées au conteneur
+  "containerEnv": {
+    "SHELL": "/bin/bash",
+    // Utilisé pour que docker-compose use le bon projet
+    "COMPOSE_PROJECT_NAME": "${localWorkspaceFolderBasename}",
+    // Inclut automatiquement l'override devcontainer pour les chemins de volumes
+    "COMPOSE_FILE": "docker-compose.yml:.devcontainer/docker-compose.devcontainer.yml"
+  },
+
+  // Configuration VS Code
   "customizations": {
     "vscode": {
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.analysis.typeCheckingMode": "basic",
         "editor.formatOnSave": true,
-        "terminal.integrated.defaultProfile.linux": "bash"
-      }
+        "terminal.integrated.defaultProfile.linux": "bash",
+        // Ajouter le dossier .devcontainer au workspace pour modifier les services
+        "files.exclude": {
+          "**/__pycache__": true,
+          "**/.pytest_cache": true,
+          ".env": false
+        }
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint"
+      ]
     }
   },
 
-  "containerEnv": {
-    "SHELL": "/bin/bash"
-  },
+  // Commandes après création du conteneur
+  "postCreateCommand": "python --version && bash --version && docker --version && docker compose version && echo 'Docker setup complete! Run: docker compose up -d'",
 
-  "postCreateCommand": "python --version && node --version && bash --version && docker --version && docker compose version",
-
-  "postStartCommand": "sudo chmod 666 /var/run/docker.sock"
+  // Commande après démarrage (répare les permissions du socket Docker)
+  "postStartCommand": "sudo chmod 666 /var/run/docker.sock || true"
 }

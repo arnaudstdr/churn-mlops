@@ -90,6 +90,96 @@ The model is evaluated on both validation and test sets to ensure robustness and
 
 ---
 
+## API
+
+The prediction model is exposed via a REST API built with FastAPI.
+
+### Endpoints
+
+#### `GET /health`
+
+Returns the current status of the API and whether the model is loaded.
+
+**Response `200`**
+```json
+{
+  "status": "healthy",
+  "model_loaded": true,
+  "model_version": "1.0.0"
+}
+```
+
+---
+
+#### `GET /model`
+
+Returns metadata about the loaded model.
+
+**Response `200`**
+```json
+{
+  "model_type": "LogisticRegression",
+  "model_version": "1.0.0",
+  "features": ["gender", "SeniorCitizen", "tenure", "..."],
+  "training_date": null
+}
+```
+
+---
+
+#### `POST /predict`
+
+Predicts churn probability for a given customer.
+
+**Request body**
+```json
+{
+  "gender": "Female",
+  "SeniorCitizen": 0,
+  "Partner": "Yes",
+  "Dependents": "Yes",
+  "tenure": 60,
+  "PhoneService": "Yes",
+  "MultipleLines": "No",
+  "InternetService": "DSL",
+  "OnlineSecurity": "Yes",
+  "OnlineBackup": "Yes",
+  "DeviceProtection": "Yes",
+  "TechSupport": "Yes",
+  "StreamingTV": "No",
+  "StreamingMovies": "No",
+  "Contract": "Two year",
+  "PaperlessBilling": "No",
+  "PaymentMethod": "Bank transfer (automatic)",
+  "MonthlyCharges": 55.0,
+  "TotalCharges": "3300.0"
+}
+```
+
+**Response `200`**
+```json
+{
+  "churn_prediction": false,
+  "churn_probability": 0.07,
+  "model_version": "1.0.0",
+  "request_id": "a1b2c3d4-..."
+}
+```
+
+**Error codes**
+
+| Code | Cause |
+|------|-------|
+| `422` | Missing or invalid field |
+| `503` | Model not loaded |
+| `500` | Internal prediction error |
+
+### Headers
+
+Every response includes a `X-Request-ID` header matching the `request_id` field in the response body. This can be used to correlate logs and Sentry events.
+
+---
+
 ## Planned evolution (high-level roadmap)
 
 Planned steps include:
