@@ -2,6 +2,7 @@ python-dotenv
 fastapi
 httpx
 joblib
+mlflow
 pandas
 pytest
 requests
