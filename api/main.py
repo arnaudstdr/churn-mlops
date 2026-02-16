@@ -1,16 +1,18 @@
+import json
+import logging
+import os
+import uuid
+from datetime import UTC, datetime
+from typing import Any, Dict
+
+import sentry_sdk
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-import os
-import sentry_sdk
-import uuid
-import logging
-import json
-from datetime import datetime, UTC
-from typing import Dict, Any
 
-from .schemas import CustomerFeatures, PredictionResult, HealthCheck, ModelInfo
+from .schemas import CustomerFeatures, HealthCheck, ModelInfo, PredictionResult
 from .service import ChurnPredictionService
+
 
 # Configure JSON logging
 class JSONFormatter(logging.Formatter):
@@ -114,7 +116,7 @@ async def log_requests(request: Request, call_next):
 
         # Log successful request
         logger.info(
-            f"Request completed",
+            "Request completed",
             extra={
                 **extra,
                 "status_code": response.status_code,
@@ -296,7 +298,7 @@ async def predict_churn(request: Request, customer_data: CustomerFeatures):
 
     try:
         logger.info(
-            f"Received prediction request",
+            "Received prediction request",
             extra={
                 "request_id": request_id,
                 "endpoint": "/predict",
@@ -329,7 +331,7 @@ async def predict_churn(request: Request, customer_data: CustomerFeatures):
         churn_prediction, churn_probability = prediction_service.predict(input_data)
 
         logger.info(
-            f"Prediction completed",
+            "Prediction completed",
             extra={
                 "request_id": request_id,
                 "endpoint": "/predict",

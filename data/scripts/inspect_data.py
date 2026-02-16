@@ -1,7 +1,8 @@
-import pandas as pd
-import numpy as np
 from pathlib import Path
 from typing import Union
+
+import pandas as pd
+
 
 def load_data(data_path: Union[str, Path]) -> pd.DataFrame:
     """Charge les données depuis un fichier CSV.

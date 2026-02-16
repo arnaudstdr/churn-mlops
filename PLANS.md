@@ -139,7 +139,7 @@ Assurer la **traçabilité, la reproductibilité et la non-régression**.
 - [ ] Test de non-régression simple sur un échantillon fixe
 
 #### Qualité de code
-- [ ] Configurer lint et format (ruff, black ou équivalent)
+- [x] Configurer lint et format (ruff, black ou équivalent)
 - [ ] Ajouter des tests automatiques
 
 ---
